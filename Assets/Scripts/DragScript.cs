@@ -7,6 +7,7 @@ public class DragScript : MonoBehaviour {
 
     Camera gameCam;
     Transform bObjects;
+    Transform wsManager;
 
     int dragType = 0;
     // 0 = 
@@ -58,6 +59,7 @@ public class DragScript : MonoBehaviour {
 	void Start () {
         gameCam = GameObject.Find("Main Camera").GetComponent<Camera>();
         bObjects = GameObject.Find("Interactive").transform;
+        wsManager = GameObject.Find("PlayerTriggers").transform;
         boardObjectCount = bObjects.childCount;
         for (int i = boardObjectCount - 1; i > -1; i--) {
             if (bObjects.GetChild(i).GetComponent<SpriteRenderer>() != null) {
@@ -169,6 +171,9 @@ public class DragScript : MonoBehaviour {
                             -1f - i * 0.01f);
                     }
                 }
+
+                //Send message to server container to check for cards to send.
+                wsManager.GetComponent<ServerManager>().DropEvent();
             }
             else if (dragType == 2 || dragType == 3) {
                 Ray ray = gameCam.ScreenPointToRay(Input.mousePosition);
